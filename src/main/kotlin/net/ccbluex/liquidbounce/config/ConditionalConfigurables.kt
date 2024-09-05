@@ -26,7 +26,7 @@ import net.ccbluex.liquidbounce.script.ScriptApi
 import net.ccbluex.liquidbounce.web.socket.protocol.ProtocolExclude
 
 /**
- * Should handle events when enabled. Allows the client-user to toggle features. (like modules)
+ * 处理启用时的事件。允许客户端用户切换功能（如模块）。
  */
 abstract class ToggleableConfigurable(
     @Exclude @ProtocolExclude val parent: Listenable? = null,
@@ -34,9 +34,12 @@ abstract class ToggleableConfigurable(
     enabled: Boolean
 ) : Listenable, Configurable(name, valueType = ValueType.TOGGLEABLE), QuickImports {
 
-    // TODO: Make enabled change also call newState
+    // TODO: 使 enabled 的改变也调用 newState
     var enabled by boolean("Enabled", enabled)
 
+    /**
+     * 根据状态启用或禁用配置项。
+     */
     fun newState(state: Boolean) {
         if (!enabled) {
             return
@@ -52,25 +55,36 @@ abstract class ToggleableConfigurable(
         inner.filterIsInstance<ToggleableConfigurable>().forEach { it.newState(state) }
     }
 
+    /**
+     * 启用配置项。
+     */
     open fun enable() {}
 
+    /**
+     * 禁用配置项。
+     */
     open fun disable() {}
 
     /**
-     * Because we pass the parent to the Listenable, we can simply
-     * call the super.handleEvents() and it will return false if the upper-listenable is disabled.
+     * 处理事件。如果上级 Listenable 或当前配置项未启用，则返回 false。
      */
     override fun handleEvents() = super.handleEvents() && enabled
 
+    /**
+     * 返回上级 Listenable。
+     */
     override fun parent() = parent
 
+    /**
+     * 获取启用的值。
+     */
     @ScriptApi
     @Suppress("unused")
     fun getEnabledValue(): Value<*> = this.inner[0]
 }
 
 /**
- * Allows to configure and manage modes
+ * 允许配置和管理模式。
  */
 class ChoiceConfigurable<T : Choice>(
     @Exclude @ProtocolExclude val listenable: Listenable,
@@ -83,6 +97,9 @@ class ChoiceConfigurable<T : Choice>(
     private var defaultChoice: T = activeChoiceCallback(this)
     var activeChoice: T = defaultChoice
 
+    /**
+     * 根据状态启用或禁用当前活动选择。
+     */
     fun newState(state: Boolean) {
         if (state) {
             this.activeChoice.enable()
@@ -94,6 +111,9 @@ class ChoiceConfigurable<T : Choice>(
         inner.filterIsInstance<ToggleableConfigurable>().forEach { it.newState(state) }
     }
 
+    /**
+     * 根据名称设置活动选择。
+     */
     override fun setByString(name: String) {
         val newChoice = choices.firstOrNull { it.choiceName == name }
 
@@ -106,9 +126,7 @@ class ChoiceConfigurable<T : Choice>(
             this.activeChoice.disable()
         }
 
-        // Don't remove this! This is important. We need to call the listeners of the choice in order to update
-        // the other systems accordingly. For whatever reason the conditional configurable is bypassing the value system
-        // which the other configurables use, so we do it manually.
+        // 不要移除这个！这很重要。我们需要调用选择的监听器以更新其他系统。
         set(mutableListOf(newChoice), apply = {
             this.activeChoice = it[0] as T
         })
@@ -118,6 +136,9 @@ class ChoiceConfigurable<T : Choice>(
         }
     }
 
+    /**
+     * 恢复默认选择。
+     */
     override fun restore() {
         if (this.activeChoice.handleEvents()) {
             this.activeChoice.disable()
@@ -132,13 +153,16 @@ class ChoiceConfigurable<T : Choice>(
         }
     }
 
+    /**
+     * 获取所有选择的字符串表示。
+     */
     @ScriptApi
     fun getChoicesStrings(): Array<String> = this.choices.map { it.name }.toTypedArray()
 
 }
 
 /**
- * A mode is sub-module to separate different bypasses into extra classes
+ * 模式是子模块，用于将不同的绕过方法分离到额外的类中。
  */
 abstract class Choice(name: String) : Configurable(name), Listenable, NamedChoice, QuickImports {
 
@@ -150,21 +174,35 @@ abstract class Choice(name: String) : Configurable(name), Listenable, NamedChoic
 
     abstract val parent: ChoiceConfigurable<*>
 
+    /**
+     * 启用模式。
+     */
     open fun enable() {}
 
+    /**
+     * 禁用模式。
+     */
     open fun disable() {}
 
     /**
-     * We check if the parent is active and if the mode is active, if so
-     * we handle the events.
+     * 处理事件。如果父级或模式未激活，则返回 false。
      */
     override fun handleEvents() = super.handleEvents() && isActive
 
+    /**
+     * 返回上级 Listenable。
+     */
     override fun parent() = this.parent.listenable
 
+    /**
+     * 创建选择配置项。
+     */
     protected fun <T: Choice> choices(name: String, active: T, choices: Array<T>) =
         choices(this, name, active, choices)
 
+    /**
+     * 创建选择配置项。
+     */
     protected fun <T: Choice> choices(
         name: String,
         activeCallback: (ChoiceConfigurable<T>) -> T,
@@ -173,8 +211,8 @@ abstract class Choice(name: String) : Configurable(name), Listenable, NamedChoic
 }
 
 /**
- * Empty choice.
- * It does nothing.
- * Use it when you want a client-user to disable a feature.
+ * 空选择。
+ * 它什么都不做。
+ * 当您希望客户端用户禁用某个功能时使用它。
  */
 class NoneChoice(override val parent: ChoiceConfigurable<*>) : Choice("None")
