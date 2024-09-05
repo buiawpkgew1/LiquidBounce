@@ -19,6 +19,7 @@
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+// 应用插件
 plugins {
     id 'fabric-loom'
     id 'org.jetbrains.kotlin.jvm'
@@ -29,17 +30,21 @@ plugins {
     id 'org.jetbrains.dokka' version '1.9.10'
 }
 
+// 设置Java版本兼容性
 sourceCompatibility = JavaVersion.VERSION_21
 targetCompatibility = JavaVersion.VERSION_21
 
+// 设置项目的基本属性
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+// 配置Loom插件
 loom {
     accessWidenerPath = file('src/main/resources/liquidbounce.accesswidener')
 }
 
+// 配置Maven仓库
 repositories {
     mavenCentral()
     mavenLocal()
@@ -70,33 +75,33 @@ repositories {
     }
 }
 
+// 配置项目依赖
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
 
-    // Minecraft
+    // Minecraft相关依赖
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
-    // Libraries (required mods)
-
+    // 必需的库（mod）
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
     implementation "net.fabricmc:tiny-mappings-parser:0.3.0+build.17"
 
-    // Recommended mods (on IDE)
+    // 推荐的mod（在IDE中）
     modRuntimeOnly "com.terraformersmc:modmenu:${project.mod_menu_version}"
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"
     modCompileOnly "de.florianmichael:ViaFabricPlus:${project.viafabricplus_version}"
 
-    // Tests
+    // 测试依赖
 //    modImplementation 'com.github.superblaubeere27:tenacc:e3a7ada99a'
 
-    // fix nullable imports
+    // 修复可空导入问题
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
-    // Client libraries
+    // 客户端库
     implementation("com.github.CCBlueX:mc-authlib:${project.mc_authlib_version}") {
         exclude group: 'com.google.code.gson', module: 'gson'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-core'
@@ -116,6 +121,8 @@ dependencies {
     runtimeOnly 'org.graalvm.tools:profiler:23.0.5'
     runtimeOnly 'org.graalvm.tools:chromeinspector:23.0.5'
 
+    // Netty相关依赖
+    // Netty相关依赖
     // https://mvnrepository.com/artifact/io.netty/netty-codec
     implementation 'io.netty:netty-codec:4.1.82.Final'
     // https://mvnrepository.com/artifact/io.netty/netty-codec-http
@@ -130,12 +137,12 @@ dependencies {
 
     implementation 'org.apache.commons:commons-exec:1.3'
 
-    // Test libraries
-
+    // 测试库
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+// 处理资源文件
 processResources {
     inputs.property 'version', project.version
 
@@ -159,8 +166,9 @@ processResources {
     }
 }
 
-// The following code will include the theme into the build
+// 以下代码将主题包含到构建中
 
+// 注册npm安装主题任务
 tasks.register('npmInstallTheme', NpmTask) {
     workingDir = file('src-theme')
     args = ['i']
@@ -172,6 +180,7 @@ tasks.register('npmInstallTheme', NpmTask) {
     outputs.dir("src-theme/node_modules")
 }
 
+// 注册构建主题任务
 tasks.register('buildTheme', NpmTask) {
     dependsOn 'npmInstallTheme'
     workingDir = file('src-theme')
@@ -190,6 +199,7 @@ tasks.register('buildTheme', NpmTask) {
     outputs.dir('src-theme/dist')
 }
 
+// 注册打包主题任务
 tasks.register('bundleTheme', NodeTask) {
     dependsOn 'buildTheme'
     workingDir = file('src-theme')
@@ -198,7 +208,7 @@ tasks.register('bundleTheme', NodeTask) {
         println 'Successfully attached theme to build'
     }
 
-    // Incremental stuff
+    // 增量构建
     inputs.files(
             'src-theme/package.json',
             'src-theme/package-lock.json',
@@ -211,6 +221,7 @@ tasks.register('bundleTheme', NodeTask) {
     outputs.files('src-theme/resources/assets/liquidbounce/default_theme.zip')
 }
 
+// 配置源集
 sourceSets {
     main {
         resources {
@@ -239,12 +250,14 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
+// 配置detekt插件
 detekt {
     config.setFrom(file("${rootProject.projectDir}/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
     baseline = file("${rootProject.projectDir}/config/detekt/baseline.xml")
 }
 
+// 注册detekt项目基线任务
 task detektProjectBaseline(type: io.gitlab.arturbosch.detekt.DetektCreateBaselineTask) {
     description = "Overrides current baseline."
     ignoreFailures.set(true)
@@ -259,6 +272,7 @@ task detektProjectBaseline(type: io.gitlab.arturbosch.detekt.DetektCreateBaselin
     exclude("**/build/**")
 }
 
+// 配置Java插件
 java {
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
@@ -266,6 +280,7 @@ java {
     withSourcesJar()
 }
 
+// 配置Kotlin编译选项
 compileKotlin {
     compilerOptions {
         suppressWarnings = true
@@ -273,6 +288,7 @@ compileKotlin {
     }
 }
 
+// 配置shadowJar任务
 shadowJar {
     archiveClassifier.set('shadow')
 
@@ -304,14 +320,17 @@ shadowJar {
     }
 }
 
+// 配置jar任务
 jar {
     from 'LICENSE'
 }
 
+// 配置remapJar任务
 remapJar {
     inputFile = shadowJar.archiveFile
 }
 
+// 注册复制zip包含文件任务
 tasks.register('copyZipInclude', Copy) {
     from 'zip_include/'
     into 'build/libs/zip'
