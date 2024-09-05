@@ -23,16 +23,20 @@ import com.google.gson.FieldAttributes
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+// 运行时保留的注解，用于标记需要排除的字段
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD)
 annotation class Exclude
 
+// 实现 ExclusionStrategy 接口的类，用于排除带有 Exclude 注解的字段
 class ExcludeStrategy : ExclusionStrategy {
+    // 判断是否跳过某个类，这里总是返回 false，表示不跳过任何类
     override fun shouldSkipClass(clazz: Class<*>?) = false
+    // 判断是否跳过某个字段，如果字段带有 Exclude 注解则返回 true
     override fun shouldSkipField(field: FieldAttributes) = field.getAnnotation(Exclude::class.java) != null
 }
 
 /**
- * Decode JSON content
+ * 解码 JSON 内容
  */
 inline fun <reified T> decode(stringJson: String): T = Gson().fromJson(stringJson, object : TypeToken<T>() {}.type)

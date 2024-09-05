@@ -26,8 +26,10 @@ import com.google.gson.JsonSerializer
 import net.ccbluex.liquidbounce.config.Value
 import java.lang.reflect.Type
 
+// 用于将 Value 对象序列化为 JsonElement 的适配器
 object ValueSerializationAdapter : JsonSerializer<Value<*>> {
 
+    // 重写序列化方法，将 Value 对象转换为 JsonElement
     override fun serialize(src: Value<*>, typeOfSrc: Type?, context: JsonSerializationContext): JsonElement {
         val obj = JsonObject()
 

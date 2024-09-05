@@ -22,8 +22,10 @@ package net.ccbluex.liquidbounce.config.adapter
 import com.google.gson.*
 import java.lang.reflect.Type
 
+// 用于序列化和反序列化 ClosedRange 类型的对象
 object RangeSerializer : JsonSerializer<ClosedRange<*>>, JsonDeserializer<ClosedRange<*>> {
 
+    // 将 ClosedRange 对象序列化为 JsonElement
     override fun serialize(src: ClosedRange<*>, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         val obj = JsonObject()
 
@@ -33,6 +35,7 @@ object RangeSerializer : JsonSerializer<ClosedRange<*>>, JsonDeserializer<Closed
         return obj
     }
 
+    // 从 JsonElement 反序列化为 ClosedRange 对象
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext?): ClosedRange<*> {
         val obj = json.asJsonObject
 

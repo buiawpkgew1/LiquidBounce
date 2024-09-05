@@ -5,12 +5,13 @@ import net.minecraft.client.render.VertexConsumer;
 
 import javax.annotation.Nullable;
 
+// 定义一个接口，用于获取仅绘制到轮廓帧缓冲区的顶点消费者
 public interface OutlineVertexConsumerProviderSingleDrawAddition {
     /**
-     * {@link net.minecraft.client.render.OutlineVertexConsumerProvider#getBuffer(RenderLayer)} creates a consumer which
-     * renders to the outline framebuffer but also to the original framebuffer.
+     * {@link net.minecraft.client.render.OutlineVertexConsumerProvider#getBuffer(RenderLayer)} 创建一个消费者，
+     * 该消费者既绘制到轮廓帧缓冲区，也绘制到原始帧缓冲区。
      * <p>
-     * If you only want to render to the outline framebuffer, use this method.
+     * 如果你只想绘制到轮廓帧缓冲区，请使用此方法。
      */
     @Nullable
     VertexConsumer liquid_bounce_getSingleDrawBuffers(RenderLayer layer);

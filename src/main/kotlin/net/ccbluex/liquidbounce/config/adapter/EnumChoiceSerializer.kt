@@ -26,8 +26,10 @@ import com.google.gson.JsonSerializer
 import net.ccbluex.liquidbounce.config.NamedChoice
 import java.lang.reflect.Type
 
+// 用于将 NamedChoice 枚举类型序列化为 JSON 的适配器
 object EnumChoiceSerializer : JsonSerializer<NamedChoice> {
 
+    // 重写 serialize 方法，将 NamedChoice 对象序列化为 JSON 元素
     override fun serialize(src: NamedChoice, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         return JsonPrimitive(src.choiceName)
     }

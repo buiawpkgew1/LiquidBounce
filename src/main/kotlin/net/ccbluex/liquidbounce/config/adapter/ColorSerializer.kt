@@ -24,12 +24,15 @@ import net.ccbluex.liquidbounce.render.engine.Color4b
 import java.awt.Color
 import java.lang.reflect.Type
 
+// 颜色序列化器，用于将 Color4b 对象序列化为 JSON 格式，以及从 JSON 格式反序列化为 Color4b 对象
 object ColorSerializer : JsonSerializer<Color4b>, JsonDeserializer<Color4b> {
 
+    // 将 Color4b 对象序列化为 JSON 元素
     override fun serialize(src: Color4b, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         return JsonPrimitive(src.toRGBA())
     }
 
+    // 从 JSON 元素反序列化为 Color4b 对象
     override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): Color4b {
         return Color4b(Color(json.asInt, true))
     }

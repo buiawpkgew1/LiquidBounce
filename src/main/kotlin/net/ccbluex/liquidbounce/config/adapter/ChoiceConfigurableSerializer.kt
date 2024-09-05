@@ -26,8 +26,10 @@ import net.ccbluex.liquidbounce.config.Choice
 import net.ccbluex.liquidbounce.config.ChoiceConfigurable
 import java.lang.reflect.Type
 
+// 用于将ChoiceConfigurable对象序列化为JsonElement的序列化器
 object ChoiceConfigurableSerializer : JsonSerializer<ChoiceConfigurable<Choice>> {
 
+    // 重写serialize方法，将ChoiceConfigurable对象序列化为JsonElement
     override fun serialize(
         src: ChoiceConfigurable<Choice>, typeOfSrc: Type, context: JsonSerializationContext
     ): JsonElement {

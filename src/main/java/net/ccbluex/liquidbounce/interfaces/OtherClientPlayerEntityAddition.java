@@ -21,13 +21,13 @@ package net.ccbluex.liquidbounce.interfaces;
 import net.minecraft.entity.damage.DamageSource;
 
 /**
- * Additions to {@link net.minecraft.client.network.OtherClientPlayerEntity}.
+ * 对 {@link net.minecraft.client.network.OtherClientPlayerEntity} 的扩展接口。
  */
 public interface OtherClientPlayerEntityAddition {
 
     /**
-     * Allows the entity to receive damage.
-     * Used in {@link net.ccbluex.liquidbounce.features.command.commands.client.fakeplayer.FakePlayer}.
+     * 允许实体接收伤害。
+     * 在 {@link net.ccbluex.liquidbounce.features.command.commands.client.fakeplayer.FakePlayer} 中使用。
      */
     @SuppressWarnings("unused")
     boolean liquid_bounce$actuallyDamage(DamageSource source, float amount);

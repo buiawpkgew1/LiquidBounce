@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.concurrent.thread
 
+// 包含配置的类，用于指定是否包含绑定和隐藏模块
 data class IncludeConfiguration(
     val includeBinds: Boolean = false,
     val includeHidden: Boolean = false
@@ -45,6 +46,7 @@ data class IncludeConfiguration(
     }
 }
 
+// 自动配置管理对象
 object AutoConfig {
 
     var loadingNow = false
@@ -56,6 +58,7 @@ object AutoConfig {
             configsCache = this
         }
 
+    // 加载自动配置的方法
     fun loadAutoConfig(autoConfig: AutoSettings) = thread(name = "config-loader") {
         loadingNow = true
         runCatching {
@@ -76,10 +79,9 @@ object AutoConfig {
     }
 
     /**
-     * Handles the data from a configurable, which might be an auto config and therefore has data which
-     * should be displayed to the user.
+     * 处理可能的自动配置数据，并将其显示给用户
      *
-     * @param jsonObject The json object of the configurable
+     * @param jsonObject 配置的JSON对象
      * @see ConfigSystem.deserializeConfigurable
      */
     fun handlePossibleAutoConfig(jsonObject: JsonObject) {
@@ -174,7 +176,7 @@ object AutoConfig {
     }
 
     /**
-     * Created an auto config, which stores the moduleConfigur
+     * 创建一个自动配置，存储模块配置
      */
     fun serializeAutoConfig(
         writer: Writer,

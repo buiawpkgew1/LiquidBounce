@@ -29,8 +29,10 @@ import net.ccbluex.liquidbounce.features.module.modules.player.autoshop.serializ
 import net.ccbluex.liquidbounce.utils.client.logger
 import net.ccbluex.liquidbounce.utils.client.notification
 
+// 自动商店配置对象
 object AutoShopConfig {
 
+    // 初始化 Gson 对象用于序列化和反序列化
     private val autoShopGson = GsonBuilder()
         .setPrettyPrinting()
         .registerTypeAdapter(ShopElement::class.javaObjectType, ShopElementDeserializer())
@@ -40,7 +42,7 @@ object AutoShopConfig {
         .create()
 
     /**
-     * Loads [shopConfigPreset] and displays a notification depending on the result
+     * 加载 [shopConfigPreset] 并根据结果显示通知
      */
     fun loadAutoShopConfig(shopConfigPreset: ShopConfigPreset) : Boolean {
         val result = load(shopConfigPreset)
@@ -52,6 +54,7 @@ object AutoShopConfig {
         return result
     }
 
+    // 加载商店配置
     fun load(shopConfigPreset: ShopConfigPreset): Boolean {
         runCatching {
             javaClass.getResourceAsStream(shopConfigPreset.internalPath).use { inputStream ->
@@ -59,7 +62,7 @@ object AutoShopConfig {
 
                 val shopConfig = autoShopGson.fromJson(inputStream.reader(), ShopConfig::class.java)
 
-                // add items to AutoShop
+                // 将物品添加到自动商店
                 ModuleAutoShop.disable()
                 ModuleAutoShop.currentConfig = shopConfig
                 ModuleAutoShop.enable()
@@ -76,7 +79,7 @@ object AutoShopConfig {
 }
 
 /**
- * Represents the locally available shop configurations
+ * 表示本地可用的商店配置
  */
 @Suppress("unused")
 enum class ShopConfigPreset(override val choiceName: String, val localFileName: String) : NamedChoice {

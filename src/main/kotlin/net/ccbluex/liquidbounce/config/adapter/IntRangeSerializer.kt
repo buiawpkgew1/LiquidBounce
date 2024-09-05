@@ -22,8 +22,10 @@ package net.ccbluex.liquidbounce.config.adapter
 import com.google.gson.*
 import java.lang.reflect.Type
 
+// 用于序列化和反序列化 IntRange 类型的对象
 object IntRangeSerializer : JsonSerializer<IntRange>, JsonDeserializer<IntRange> {
 
+    // 将 IntRange 对象序列化为 JsonElement
     override fun serialize(src: IntRange, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         val obj = JsonObject()
 
@@ -33,6 +35,7 @@ object IntRangeSerializer : JsonSerializer<IntRange>, JsonDeserializer<IntRange>
         return obj
     }
 
+    // 从 JsonElement 反序列化为 IntRange 对象
     override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): IntRange {
         val obj = json.asJsonObject
 

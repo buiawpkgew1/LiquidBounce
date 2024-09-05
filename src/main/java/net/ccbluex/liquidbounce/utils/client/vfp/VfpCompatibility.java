@@ -33,14 +33,17 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
- * Compatibility layer for ViaFabricPlus
+ * 兼容ViaFabricPlus的兼容层
  * <p>
- * DO NOT CALL ANY OF THESE METHODS WITHOUT CHECKING IF VIAFABRICPLUS IS LOADED
+ * 在调用这些方法之前，请确保ViaFabricPlus已加载
  */
 public enum VfpCompatibility {
 
     INSTANCE;
 
+    /**
+     * 禁用冲突的ViaFabricPlus选项
+     */
     public void unsafeDisableConflictingVfpOptions() {
         try {
             VisualSettings visualSettings = VisualSettings.global();
@@ -52,6 +55,10 @@ public enum VfpCompatibility {
         }
     }
 
+    /**
+     * 获取协议版本
+     * @return 客户端协议版本
+     */
     public ClientProtocolVersion unsafeGetProtocolVersion() {
         try {
             ProtocolVersion version = ProtocolTranslator.getTargetVersion();
@@ -62,6 +69,10 @@ public enum VfpCompatibility {
         }
     }
 
+    /**
+     * 获取所有协议版本
+     * @return 客户端协议版本数组
+     */
     public ClientProtocolVersion[] unsafeGetProtocolVersions() {
         try {
             var protocols = ProtocolVersion.getProtocols()
@@ -78,6 +89,9 @@ public enum VfpCompatibility {
         }
     }
 
+    /**
+     * 打开ViaFabricPlus协议选择界面
+     */
     public void unsafeOpenVfpProtocolSelection() {
         try {
             var currentScreen = MinecraftClient.getInstance().currentScreen;
@@ -91,6 +105,10 @@ public enum VfpCompatibility {
         }
     }
 
+    /**
+     * 选择协议版本
+     * @param protocolId 协议ID
+     */
     public void unsafeSelectProtocolVersion(int protocolId) {
         try {
             if (!ProtocolVersion.isRegistered(protocolId)) {
@@ -104,6 +122,10 @@ public enum VfpCompatibility {
         }
     }
 
+    /**
+     * 检查是否为1.8版本
+     * @return 是否为1.8版本
+     */
     public boolean isEqual1_8() {
         try {
             var version = ProtocolTranslator.getTargetVersion();
@@ -116,6 +138,10 @@ public enum VfpCompatibility {
         }
     }
 
+    /**
+     * 检查是否为1.8或更早版本
+     * @return 是否为1.8或更早版本
+     */
     public boolean isOlderThanOrEqual1_8() {
         try {
             var version = ProtocolTranslator.getTargetVersion();
@@ -128,6 +154,10 @@ public enum VfpCompatibility {
         }
     }
 
+    /**
+     * 检查是否为1.7.10或更早版本
+     * @return 是否为1.7.10或更早版本
+     */
     public boolean isOlderThanOrEqual1_7_10() {
         try {
             var version = ProtocolTranslator.getTargetVersion();

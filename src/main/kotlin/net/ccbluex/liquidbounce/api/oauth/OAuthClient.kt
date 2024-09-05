@@ -20,6 +20,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+// OAuthClient 对象，用于处理OAuth认证流程
 object OAuthClient {
 
     private const val CLIENT_ID = "J2hzqzCxch8hfOPRFNINOZV5Ma4X4BFdZpMjAVEW"
@@ -32,10 +33,12 @@ object OAuthClient {
     @Volatile
     private var authCodeContinuation: Continuation<String>? = null
 
+    // 在指定的协程作用域中运行给定的代码块
     fun runWithScope(block: suspend CoroutineScope.() -> Unit) {
         scope.launch { block() }
     }
 
+    // 启动OAuth认证流程，返回客户端账户信息
     suspend fun startAuth(onUrl: (String) -> Unit): ClientAccount {
         val (codeVerifier, codeChallenge) = PKCEUtils.generatePKCE()
         val state = UUID.randomUUID().toString()
@@ -56,6 +59,7 @@ object OAuthClient {
         return ClientAccount(session = tokenResponse.toAuthSession())
     }
 
+    // 启动Netty服务器并返回绑定的端口号
     private suspend fun startNettyServer(): Int = suspendCoroutine { cont ->
         scope.launch {
             runCatching {
@@ -82,12 +86,14 @@ object OAuthClient {
         }
     }
 
+    // Netty通道初始化器，用于配置通道处理程序
     class NettyChannelInitializer : ChannelInitializer<SocketChannel>() {
         override fun initChannel(ch: SocketChannel) {
             ch.pipeline().addLast(HttpServerCodec(), HttpObjectAggregator(65536), NettyAuthHandler())
         }
     }
 
+    // Netty认证处理程序，处理HTTP请求并获取认证码
     class NettyAuthHandler : SimpleChannelInboundHandler<FullHttpRequest>() {
         override fun channelRead0(ctx: ChannelHandlerContext, msg: FullHttpRequest) {
             val uri = msg.uri()
@@ -114,15 +120,18 @@ object OAuthClient {
         }
     }
 
+    // 构建认证URL
     private inline fun buildAuthUrl(codeChallenge: String, state: String, redirectUri: String): String {
         return "$AUTHORIZE_URL?client_id=$CLIENT_ID&redirect_uri=$redirectUri&response_type=code&state=$state" +
             "&code_challenge=$codeChallenge&code_challenge_method=S256"
     }
 
+    // 等待认证码
     private suspend fun waitForAuthCode(): String = suspendCoroutine { cont ->
         authCodeContinuation = cont
     }
 
+    // 交换认证码以获取令牌
     private suspend fun exchangeCodeForTokens(code: String, codeVerifier: String,
                                               redirectUri: String): TokenResponse = withContext(Dispatchers.IO) {
         val response = HttpClient.postForm(
@@ -133,6 +142,7 @@ object OAuthClient {
         return@withContext decode(response)
     }
 
+    // 刷新令牌
     suspend fun renewToken(session: OAuthSession): OAuthSession = withContext(Dispatchers.IO) {
         val response = HttpClient.postForm(
             TOKEN_URL,
@@ -143,6 +153,7 @@ object OAuthClient {
         return@withContext tokenResponse.toAuthSession()
     }
 
+    // 获取用户信息
     suspend fun getUserInformation(session: OAuthSession): UserInformation = withContext(Dispatchers.IO) {
         val response = HttpClient.request("$API_V3_ENDPOINT/oauth/user", "GET", headers =
             arrayOf("Authorization" to "Bearer ${session.accessToken}")
@@ -150,6 +161,7 @@ object OAuthClient {
         return@withContext decode(response)
     }
 
+    // 获取用户的化妆品信息
     suspend fun getCosmetics(session: OAuthSession): Set<Cosmetic> = withContext(Dispatchers.IO) {
         val response = HttpClient.request("$API_V3_ENDPOINT/cosmetics/self", "GET", headers =
             arrayOf("Authorization" to "Bearer ${session.accessToken}")
@@ -157,6 +169,7 @@ object OAuthClient {
         return@withContext decode(response)
     }
 
+    // 转移临时所有权
     suspend fun transferTemporaryOwnership(session: OAuthSession, uuid: UUID) = withContext(Dispatchers.IO) {
         HttpClient.request("$API_V3_ENDPOINT/cosmetics/self", "PUT", headers =
             arrayOf(
@@ -169,6 +182,7 @@ object OAuthClient {
         )
     }
 
+    // 令牌响应数据类
     data class TokenResponse(
         @SerializedName("access_token") val accessToken: String,
         // In seconds
@@ -206,4 +220,3 @@ object OAuthClient {
         </html>
     """
 }
-

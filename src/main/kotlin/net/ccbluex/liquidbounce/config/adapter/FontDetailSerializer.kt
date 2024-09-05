@@ -23,14 +23,17 @@ import com.google.gson.*
 import net.ccbluex.liquidbounce.render.Fonts
 import java.lang.reflect.Type
 
+// 用于序列化和反序列化 Fonts.FontInfo 对象的适配器
 object FontDetailSerializer : JsonSerializer<Fonts.FontInfo>, JsonDeserializer<Fonts.FontInfo> {
 
+    // 将 Fonts.FontInfo 对象序列化为 JsonElement
     override fun serialize(src: Fonts.FontInfo, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         val obj = JsonObject()
         obj.addProperty("name", src.name)
         return obj
     }
 
+    // 从 JsonElement 反序列化为 Fonts.FontInfo 对象
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type?,

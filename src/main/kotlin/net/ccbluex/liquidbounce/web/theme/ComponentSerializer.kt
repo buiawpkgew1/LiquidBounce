@@ -30,8 +30,10 @@ import net.ccbluex.liquidbounce.web.theme.component.Component
 import java.lang.reflect.Type
 import java.util.*
 
+// 组件序列化器，用于将Component对象序列化为Json格式
 object ComponentSerializer : JsonSerializer<Component> {
 
+    // 重写序列化方法，将Component对象转换为JsonObject
     override fun serialize(
         src: Component,
         typeOfSrc: Type,

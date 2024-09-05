@@ -28,8 +28,10 @@ import net.ccbluex.liquidbounce.features.module.Category
 import net.ccbluex.liquidbounce.features.module.Module
 import java.lang.reflect.Type
 
+// 配置项序列化器，用于将 Configurable 对象序列化为 JsonObject
 object ConfigurableSerializer : JsonSerializer<Configurable> {
 
+    // 重写序列化方法，将 Configurable 对象转换为 JsonObject
     override fun serialize(
         src: Configurable,
         typeOfSrc: Type,
@@ -41,11 +43,12 @@ object ConfigurableSerializer : JsonSerializer<Configurable> {
 }
 
 /**
- * Assign [AutoConfigurableSerializer] serializer for Configurables that should be published publicly instead of
- * using [ConfigurableSerializer]
+ * 自动配置项序列化器，用于将需要公开发布的 Configurable 对象序列化为 JsonObject
+ * 而不是使用 [ConfigurableSerializer]
  */
 object AutoConfigurableSerializer : JsonSerializer<Configurable> {
 
+    // 重写序列化方法，将 Configurable 对象转换为 JsonObject，并过滤不需要公开的值
     override fun serialize(
         src: Configurable,
         typeOfSrc: Type,
@@ -56,28 +59,27 @@ object AutoConfigurableSerializer : JsonSerializer<Configurable> {
     }
 
     /**
-     * Checks if value should be included in public config
+     * 检查值是否应该包含在公开配置中
      */
     private fun checkIfInclude(value: Value<*>): Boolean {
         /**
-         * Do not include values that are not supposed to be shared
-         * with other users
+         * 不包含不应该与其他用户共享的值
          */
         if (value.doNotInclude()) {
             return false
         }
 
-        // Might check if value is module
+        // 可能检查值是否为模块
         if (value is Module) {
             /**
-             * Do not include modules that are heavily user-personalised
+             * 不包含高度用户个性化的模块
              */
             if (value.category == Category.RENDER || value.category == Category.CLIENT) {
                 return false
             }
         }
 
-        // Otherwise include value
+        // 否则包含值
         return true
     }
 

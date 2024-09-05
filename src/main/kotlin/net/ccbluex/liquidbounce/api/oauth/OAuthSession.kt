@@ -1,7 +1,7 @@
 package net.ccbluex.liquidbounce.api.oauth
 
 /**
- * Contains the access token and the refresh token.
+ * 包含访问令牌和刷新令牌的数据类。
  */
 data class OAuthSession(
     var accessToken: ExpiryValue<String>,

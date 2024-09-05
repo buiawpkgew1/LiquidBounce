@@ -24,12 +24,15 @@ import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
 import java.lang.reflect.Type
 
+// 用于序列化和反序列化 Minecraft 方块的 Gson 适配器
 object BlockValueSerializer : JsonSerializer<Block>, JsonDeserializer<Block> {
 
+    // 将 Block 对象序列化为 JsonElement
     override fun serialize(src: Block, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         return JsonPrimitive(Registries.BLOCK.getId(src).toString())
     }
 
+    // 从 JsonElement 反序列化为 Block 对象
     override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): Block {
         return Registries.BLOCK.get(Identifier.tryParse(json.asString))
     }

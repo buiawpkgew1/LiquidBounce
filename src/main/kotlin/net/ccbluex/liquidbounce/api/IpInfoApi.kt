@@ -33,15 +33,18 @@ import net.ccbluex.liquidbounce.config.util.decode
 import net.ccbluex.liquidbounce.features.misc.ProxyManager
 import java.net.URI
 
+// 用于获取IP信息的API对象
 object IpInfoApi {
 
+    // API的URL地址
     private const val API_URL = "https://ipinfo.io/json"
 
+    // 本地IP信息缓存
     var localIpInfo: IpInfo? = null
         private set
 
     /**
-     * Refresh local IP info
+     * 刷新本地IP信息
      */
     fun refreshLocalIpInfo() {
         requestIpInfo(success = { ipInfo ->
@@ -53,7 +56,7 @@ object IpInfoApi {
     }
 
     /**
-     * Request IP info from API
+     * 从API请求IP信息
      */
     fun requestIpInfo(proxy: ProxyManager.Proxy? = ProxyManager.currentProxy,
                       success: (IpInfo) -> Unit,
@@ -63,7 +66,7 @@ object IpInfoApi {
     }, failure = failure)
 
     /**
-     * Request to endpoint async and with proxy
+     * 异步请求端点并使用代理
      */
     private fun makeAsyncEndpointRequest(proxy: ProxyManager.Proxy?, endpoint: String,
                                          success: (String) -> Unit, failure: (Throwable) -> Unit) = runCatching {
@@ -158,6 +161,7 @@ object IpInfoApi {
     }.onFailure(failure)
 }
 
+// IP信息的数据类
 data class IpInfo(
     val ip: String?,
     val hostname: String?,

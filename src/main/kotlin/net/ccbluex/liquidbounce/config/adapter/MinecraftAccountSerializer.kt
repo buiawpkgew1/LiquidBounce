@@ -24,12 +24,15 @@ import net.ccbluex.liquidbounce.authlib.account.MinecraftAccount
 import net.ccbluex.liquidbounce.authlib.manage.AccountSerializer
 import java.lang.reflect.Type
 
+// MinecraftAccountSerializer 是一个用于序列化和反序列化 MinecraftAccount 对象的适配器
 object MinecraftAccountSerializer : JsonSerializer<MinecraftAccount>, JsonDeserializer<MinecraftAccount> {
 
+    // 序列化方法，将 MinecraftAccount 对象转换为 JsonElement
     override fun serialize(src: MinecraftAccount, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         return AccountSerializer.toJson(src)
     }
 
+    // 反序列化方法，将 JsonElement 转换为 MinecraftAccount 对象
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext?): MinecraftAccount {
         return AccountSerializer.fromJson(json.asJsonObject)
     }

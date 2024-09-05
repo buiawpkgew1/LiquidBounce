@@ -30,8 +30,10 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.RaycastContext;
 
+// TweakedMethods类，包含对射线投射方法的调整
 public class TweakedMethods {
 
+    // tweakedRaycast方法，根据ModuleGhostHand模块的状态调整射线投射逻辑
     public static BlockHitResult tweakedRaycast(BlockView blockView, RaycastContext context) {
         if (ModuleGhostHand.INSTANCE.getEnabled()) {
             var returned = (BlockHitResult) BlockView.raycast(context.getStart(), context.getEnd(), context, (contextx, pos) -> {

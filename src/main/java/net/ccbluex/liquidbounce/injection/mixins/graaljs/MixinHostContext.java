@@ -26,9 +26,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+// 混入类，用于修改HostContext类的行为
 @Mixin(targets = "com/oracle/truffle/host/HostContext")
 public class MixinHostContext {
 
+    // 修改findClassImpl方法中的变量value，将其映射为新的类名
     @ModifyVariable(method = "findClassImpl", at = @At("HEAD"), argsOnly = true, remap = false)
     private String remapClassName(String value) {
         return Remapper.INSTANCE.remapClassName(value);

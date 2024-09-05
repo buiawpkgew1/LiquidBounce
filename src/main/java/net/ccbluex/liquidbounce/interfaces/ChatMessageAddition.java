@@ -19,19 +19,19 @@
 package net.ccbluex.liquidbounce.interfaces;
 
 /**
- * Additions to {@link net.minecraft.client.gui.hud.ChatHudLine} and
- * {@link net.minecraft.client.gui.hud.ChatHudLine.Visible}.
+ * 对 {@link net.minecraft.client.gui.hud.ChatHudLine} 和
+ * {@link net.minecraft.client.gui.hud.ChatHudLine.Visible} 的扩展接口。
  */
 public interface ChatMessageAddition {
 
     /**
-     * Sets the ID for the chat message.
-     * The ID will be used for removing chat messages.
+     * 设置聊天消息的ID。
+     * 该ID将用于移除聊天消息。
      */
     void liquid_bounce$setId(String id);
 
     /**
-     * Gets the ID of the chat message.
+     * 获取聊天消息的ID。
      */
     String liquid_bounce$getId();
 

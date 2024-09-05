@@ -19,19 +19,18 @@
 package net.ccbluex.liquidbounce.interfaces;
 
 /**
- * Additions to {@link net.minecraft.client.gui.hud.ChatHudLine}.
+ * 对 {@link net.minecraft.client.gui.hud.ChatHudLine} 的扩展接口。
  */
 public interface ChatHudLineAddition {
 
     /**
-     * Sets the count of the message.
-     * This indicates how many times this massage has already been sent in
-     * {@link net.ccbluex.liquidbounce.features.module.modules.misc.ModuleBetterChat}.
+     * 设置消息的计数。
+     * 该计数表示此消息在 {@link net.ccbluex.liquidbounce.features.module.modules.misc.ModuleBetterChat} 中已经发送的次数。
      */
     void liquid_bounce$setCount(int count);
 
     /**
-     * Gets the count stored in this line.
+     * 获取存储在此行中的计数。
      */
     @SuppressWarnings("unused")
     int liquid_bounce$getCount();

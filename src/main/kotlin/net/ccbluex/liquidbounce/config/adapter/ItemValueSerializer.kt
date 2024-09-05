@@ -25,12 +25,15 @@ import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
 import java.lang.reflect.Type
 
+// 用于序列化和反序列化 Minecraft 物品的适配器
 object ItemValueSerializer : JsonSerializer<Item>, JsonDeserializer<Item> {
 
+    // 将 Minecraft 物品序列化为 JSON 元素
     override fun serialize(src: Item, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         return JsonPrimitive(Registries.ITEM.getId(src).toString())
     }
 
+    // 从 JSON 元素反序列化为 Minecraft 物品
     override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): Item {
         return Registries.ITEM.get(Identifier.tryParse(json.asString))
     }

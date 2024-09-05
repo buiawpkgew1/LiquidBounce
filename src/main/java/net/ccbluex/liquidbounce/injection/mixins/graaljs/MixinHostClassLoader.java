@@ -25,13 +25,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 /**
- * Remaps class names to their obfuscated counterparts.
+ * 将类名重映射为其混淆后的对应名称。
  *
- * Initial code by lit
+ * 初始代码由 lit 编写
  */
 @Mixin(targets = "com/oracle/truffle/host/HostClassLoader")
 public class MixinHostClassLoader {
 
+    /**
+     * 重映射类名
+     *
+     * @param value 原始类名
+     * @return 重映射后的类名
+     */
     @ModifyVariable(method = "findClass", at = @At("HEAD"), argsOnly = true, remap = false)
     private String remapClassName(String value) {
         return Remapper.INSTANCE.remapClassName(value);
